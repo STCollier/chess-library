@@ -848,16 +848,16 @@ class Board {
         static PackedBoard encodeState(const Board &board) {
             PackedBoard packed{};
 
-            packed[0] = board.occ().getBits() >> 56;
-            packed[1] = (board.occ().getBits() >> 48) & 0xFF;
-            packed[2] = (board.occ().getBits() >> 40) & 0xFF;
-            packed[3] = (board.occ().getBits() >> 32) & 0xFF;
-            packed[4] = (board.occ().getBits() >> 24) & 0xFF;
-            packed[5] = (board.occ().getBits() >> 16) & 0xFF;
-            packed[6] = (board.occ().getBits() >> 8) & 0xFF;
-            packed[7] = board.occ().getBits() & 0xFF;
+            packed[16] = board.occ().getBits() >> 56;
+            packed[17] = (board.occ().getBits() >> 48) & 0xFF;
+            packed[18] = (board.occ().getBits() >> 40) & 0xFF;
+            packed[19] = (board.occ().getBits() >> 32) & 0xFF;
+            packed[20] = (board.occ().getBits() >> 24) & 0xFF;
+            packed[21] = (board.occ().getBits() >> 16) & 0xFF;
+            packed[22] = (board.occ().getBits() >> 8) & 0xFF;
+            packed[23] = board.occ().getBits() & 0xFF;
 
-            auto offset = 8 * 2;
+            auto offset = 0;
             auto occ    = board.occ();
 
             while (occ) {
@@ -915,7 +915,7 @@ class Board {
 
             const auto parts = split_string_view<8>(position, '/');
 
-            auto offset = 8 * 2;
+            auto offset = 0;
             auto square = 0;
             auto occ    = Bitboard(0);
 
@@ -940,14 +940,14 @@ class Board {
                 }
             }
 
-            packed[0] = occ.getBits() >> 56;
-            packed[1] = (occ.getBits() >> 48) & 0xFF;
-            packed[2] = (occ.getBits() >> 40) & 0xFF;
-            packed[3] = (occ.getBits() >> 32) & 0xFF;
-            packed[4] = (occ.getBits() >> 24) & 0xFF;
-            packed[5] = (occ.getBits() >> 16) & 0xFF;
-            packed[6] = (occ.getBits() >> 8) & 0xFF;
-            packed[7] = occ.getBits() & 0xFF;
+            packed[16] = occ.getBits() >> 56;
+            packed[17] = (occ.getBits() >> 48) & 0xFF;
+            packed[18] = (occ.getBits() >> 40) & 0xFF;
+            packed[19] = (occ.getBits() >> 32) & 0xFF;
+            packed[20] = (occ.getBits() >> 24) & 0xFF;
+            packed[21] = (occ.getBits() >> 16) & 0xFF;
+            packed[22] = (occ.getBits() >> 8) & 0xFF;
+            packed[23] = occ.getBits() & 0xFF;
 
             return packed;
         }
@@ -955,11 +955,11 @@ class Board {
         static void decode(Board &board, const PackedBoard &compressed) {
             Bitboard occupied = 0ull;
 
-            for (int i = 0; i < 8; i++) {
+            for (int i = 16; i < 24; i++) {
                 occupied |= Bitboard(compressed[i]) << (56 - i * 8);
             }
 
-            int offset           = 16;
+            int offset           = 0;
             int white_castle_idx = 0, black_castle_idx = 0;
             File white_castle[2] = {File::NO_FILE, File::NO_FILE};
             File black_castle[2] = {File::NO_FILE, File::NO_FILE};
